@@ -23,7 +23,7 @@ export const vendorLogin =async(req:Request,res:Response,next:NextFunction)=>{
             })
         return res.status(200).json({
             message:"success",
-            data:signature
+            data:vendorInfo
         })
     }else{
         return res.status(400).json({
