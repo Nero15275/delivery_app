@@ -21,8 +21,17 @@ export const validatePassword= async (password:string,savedPassword:string,salt:
 }
 
 export const genrateSignature = async (payload:SignaturePayload)=>{
-    console.log(jwt.sign(payload,jwt_Key,{expiresIn:"1d"}));
     
     return  jwt.sign(payload,jwt_Key,{expiresIn:"1d"})
 
+}
+export const verifySignature=async (signature:any)=>{
+    try{
+        return  jwt.verify(signature,jwt_Key)
+    }catch(err){
+        return err
+    }
+   
+   
+   
 }

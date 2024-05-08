@@ -1,5 +1,6 @@
 import express,{Request,Response,NextFunction} from "express"
 import { createVendor, getVendorById, getVendors } from "../controllers";
+import { verifyVendorAuth } from "../middlewares";
 
 const router =express.Router();
 
