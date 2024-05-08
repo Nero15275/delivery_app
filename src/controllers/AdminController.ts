@@ -50,11 +50,17 @@ export const createVendor = async (req:Request,res:Response,next:NextFunction)=>
 }
 
 export const findVendor = async (id:string|undefined,email?:string )=>{
-
+  try{
     if(email){
-        return await Vendor.findOne({email})
+       return  await Vendor.findOne({email})
+         
+        
     }else{
-        return await Vendor.findOne({_id:id})
+       return await Vendor.findOne({_id:id})
+
+    }
+    }catch(err){
+        return null
     }
 }
 
@@ -78,7 +84,7 @@ export const getVendors = async (req:Request,res:Response,next:NextFunction)=>{
 
 export const getVendorById = async (req:Request,res:Response,next:NextFunction)=>{
     if(req.params.id){
-        const vendor= await findVendor(req.params.id)
+        const vendor:any= await findVendor(req.params.id)
         if (vendor != null){ 
             const { password: excludedPassword, salt: excludedSalt,_id:excluded_id, ...others } = vendor.toObject();
             return res.status(200).json({
