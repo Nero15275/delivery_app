@@ -1,5 +1,5 @@
 import express,{Request,Response,NextFunction} from "express"
-import { editVendorProfile, vendorLogin, vendorLoginUsingToken, viewVendorProfile } from "../controllers";
+import { editVendorProfile, editVendorServiceAvailableFlag, vendorLogin, vendorLoginUsingToken, viewVendorProfile } from "../controllers";
 import { verifyVendorAuth } from "../middlewares";
 
 
@@ -13,5 +13,6 @@ router.post("/login",vendorLogin)
 router.post("/loginWithToken",vendorLoginUsingToken)
 router.get("/profile",verifyVendorAuth,viewVendorProfile)
 router.put("/profile/edit",verifyVendorAuth,editVendorProfile)
+router.put("/profile/serviceStatus",verifyVendorAuth,editVendorServiceAvailableFlag)
 
 export {router as VendorRoute}

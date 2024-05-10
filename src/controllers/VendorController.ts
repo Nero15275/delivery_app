@@ -2,6 +2,7 @@ import express ,{Request,Response,NextFunction} from "express";
 import { findVendor } from "./AdminController";
 import { genrateSignature, validatePassword, verifySignature } from "../utility";
 import { EditVendorInput, LoginVendorInfo } from "../dto/Vendor.dto";
+import { Vendor } from "../models";
 
 export const vendorLogin =async(req:Request,res:Response,next:NextFunction)=>{
     const {email,password}=<LoginVendorInfo>req.body
@@ -88,17 +89,11 @@ export const editVendorProfile = async (req:Request,res:Response,next:NextFuncti
     try{
         const { name,phone,address,foodType } =<EditVendorInput>req.body;
     if(req.user){
-        const vendorProfile:any =await findVendor(req.user)
-        if(vendorProfile==null)
-            return res.status(400).json({
-                message:"Vendor Not Found"
-                 })
        
-        vendorProfile.name=name
-        vendorProfile.phone=phone
-        vendorProfile.address=address
-        vendorProfile.foodType=foodType
-        const saveResult = vendorProfile.save()
+    
+        const saveResult= await Vendor.findByIdAndUpdate(req.user,{ name,phone,address,foodType },{new:true})
+       
+        
         return res.status(200).json({
             message:"Success",
             data:saveResult
@@ -107,7 +102,33 @@ export const editVendorProfile = async (req:Request,res:Response,next:NextFuncti
     }
 }catch(err){
     return res.status(400).json({
-        message:err,
+        message:"Update Failed",
+        error:err
+        
+         })
+}
+
+}
+
+export const editVendorServiceAvailableFlag = async (req:Request,res:Response,next:NextFunction) =>{
+    try{
+        const { serviceAvaillable } =req.body;
+    if(req.user){
+       
+    
+        const saveResult= await Vendor.findByIdAndUpdate(req.user,{ serviceAvaillable },{new:true})
+       
+        
+        return res.status(200).json({
+            message:"Success",
+            data:saveResult
+          
+             })
+    }
+}catch(err){
+    return res.status(400).json({
+        message:"Update Failed",
+        error:err
         
          })
 }
