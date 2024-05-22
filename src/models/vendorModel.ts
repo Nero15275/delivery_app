@@ -1,76 +1,76 @@
-import mongoose,{Schema,Model,Document} from "mongoose";
+import mongoose, { Schema, Model, Document } from "mongoose";
 
-interface vendorData extends Document{
-    name:string;
-    ownerName:string;
-    foodType:[string];
-    pincode:string;
-    address:string;
-    email:string;
-    password:string;
-    phone:number;
-    salt:string;
-    serviceAvaillable:boolean;
-    rating:number;
-    coverImages:[string]
-    // foods:any
+interface vendorData extends Document {
+    name: string;
+    ownerName: string;
+    foodType: [string];
+    pincode: string;
+    address: string;
+    email: string;
+    password: string;
+    phone: number;
+    salt: string;
+    serviceAvaillable: boolean;
+    rating: number;
+    coverImages: [string]
+    foods: any
 }
 
-const vendorSchema= new Schema({
-    name:{
-        type:String,
-        required:true
+const vendorSchema = new Schema({
+    name: {
+        type: String,
+        required: true
     },
-    ownerName:{
-        type:String,
-        required:true
+    ownerName: {
+        type: String,
+        required: true
     },
-    foodType:{
-        type:[String]
+    foodType: {
+        type: [String]
     },
-    pincode:{
-        type:String,
-        required:true
+    pincode: {
+        type: String,
+        required: true
     },
-    address:{
-        type:String,
+    address: {
+        type: String,
     },
-    email:{
-        type:String,
-        required:true,
-        unique:true
+    email: {
+        type: String,
+        required: true,
+        unique: true
     },
-    password:{
-        type:String,
-        required:true
+    password: {
+        type: String,
+        required: true
     },
-    phone:{
-        type:Number,
-        required:true
+    phone: {
+        type: Number,
+        required: true
     },
-    salt:{
-        type:String,
-        required:true
+    salt: {
+        type: String,
+        required: true
     },
-    serviceAvaillable:{
-        type:Boolean
+    serviceAvaillable: {
+        type: Boolean
     },
-    rating:{
-        type:Number
+    rating: {
+        type: Number
     },
-    coverImages:[{
-        type:String
+    coverImages: [{
+        type: String
     }],
-    // foods:[{
-    //     type:mongoose.SchemaTypes.ObjectId,
-    //     ref:'food'
-    // }]
+    foods: [{
+        type: mongoose.SchemaTypes.ObjectId,
+        ref: 'food'
+    }]
 },
-{
-    timestamps:true
-})
+    {
+        timestamps: true
+    })
 
 
-const Vendor =mongoose.model<vendorData>("vendor",vendorSchema)
+const Vendor = mongoose.model<vendorData>("vendor", vendorSchema)
 
-export {Vendor}
+export { Vendor }
