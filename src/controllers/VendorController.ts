@@ -7,9 +7,7 @@ import { Food } from "../models"
 import { foodInputCreate } from "../dto/food.dto";
 
 export const vendorLogin = async (req: Request, res: Response, next: NextFunction) => {
-    console.log('====================================');
-    console.log(req.body);
-    console.log('====================================');
+    
     const { email, password } = <LoginVendorInfo>req.body
 
     if (!email || !password)
@@ -140,8 +138,57 @@ export const editVendorServiceAvailableFlag = async (req: Request, res: Response
     }
 
 }
+
+export const editVendorCoverImage = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        let coverImages: string[]=[]
+        const files =req.files  as Express.Multer.File[]
+        if (files.length==0) {
+            return res.status(400).json({
+                message:"Cover image missing add atleast one image"
+            })
+        }
+        files.map((ele:Express.Multer.File)=>{
+            
+            coverImages.push(ele.path) 
+        })
+        console.log(coverImages);
+        
+
+        if (req.user) {
+            const Vendor: any = await findVendor(req.user);
+            Vendor.coverImages.push(...coverImages)
+            const result=await Vendor.save()
+            return res.status(200).json({
+                message: "success",
+                data: result
+            })
+        }
+    } catch (err) {
+        return res.status(400).json({
+            message: "Cover image upload failed",
+            error: err
+        })
+    }
+}
+
+
+// food releted routes//
+
 export const AddFood = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        let foodImages: string[]=[]
+        const files =req.files  as Express.Multer.File[]
+        if (files.length==0) {
+            return res.status(400).json({
+                message:"Food image missing add atleast one image"
+            })
+        }
+        files.map((ele:Express.Multer.File)=>{
+            
+           foodImages.push(ele.path) 
+        })
+
         const { name,
             description,
             price,
@@ -159,14 +206,14 @@ export const AddFood = async (req: Request, res: Response, next: NextFunction) =
                 foodType,
                 category,
                 readyTime,
-                images: ['demo.png'],
+                images: foodImages,
                 vendorId: Vendor._id
             })
             Vendor.foods.push(saveResult)
-            await Vendor.save()
+            const result=await Vendor.save()
             return res.status(200).json({
                 message: "success",
-                data: saveResult
+                data: result
             })
         }
     } catch (err) {
@@ -181,7 +228,13 @@ export const getFoodOfVendor = async (req: Request, res: Response, next: NextFun
     try {
         if (req.user) {
             const Vendor: any = await findVendor(req.user);
-            const foods = await Food.find({ vendorId: Vendor._id })
+            let foods:any = await Food.find({ vendorId: Vendor._id })
+            foods=foods.map((ele:any)=>{
+                ele.images= ele.images.map((image:string)=>{
+                    return `http://localhost:8000/`+image
+                })
+                return ele
+            })
             return res.status(200).json({
                 message: "success",
                 data: foods

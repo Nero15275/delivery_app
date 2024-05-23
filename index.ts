@@ -1,29 +1,18 @@
-import express from "express";
-import bodyParser from "body-parser";
-import { AdminRoute,VendorRoute } from "./src/routes";
-import mongoose from "mongoose";
-import { dbUrl } from "./src/config";
+import express from "express"
+import App from "./src/services/ExpressApp"
+import dbConnection from "./src/services/dbConnection"
 
-const app = express()
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended:true}))
-
-app.use("/admin",AdminRoute)
-app.use("/vendor",VendorRoute)
-
-mongoose.connect(dbUrl,{
-    // useNewUrlParser:true,
-    // useUnifiedTopology:true,
-    // useCreateIndex:true
-}).then((result)=>{
-    console.log("Db Connection Successfull");
+const startServer = async()=>{
+    const app =express()
     
-}).catch(err=>{
-    console.log(err);
-    
-})
+    dbConnection()
 
-app.listen(8000,()=>{
-    console.clear()
-    console.log("server is running on port 8000")
-})
+    await App(app)
+
+     app.listen(8000,()=>{
+        console.log('server is running on port 8000');
+        
+    })
+}
+
+startServer()
